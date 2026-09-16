@@ -6,6 +6,8 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 from dotenv import load_dotenv
 
+from aimodel import vv
+
 
 load_dotenv()
 dp = Dispatcher()
@@ -13,12 +15,17 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start(message: Message) -> None:
-    await message.answer("Hello! Send me a message and I will echo it back.")
+    await message.answer("Hello, Send me a voice message and I will convert it to text")
 
 
-@dp.message(F.text)
-async def echo(message: Message) -> None:
-    await message.answer(message.text)
+@dp.message(F.voice)
+async def voice_handler(message: Message, bot: Bot) -> None:
+    await bot.download(
+        message.voice,
+        destination="voice.ogg"
+        )
+
+    await message.reply(vv())
 
 
 async def main() -> None:
